@@ -30,6 +30,7 @@
 - [Araçlar](#araçlar)
 - [Proje geçmişi](#proje-geçmişi)
 - [Kaynaklar ve atıf](#kaynaklar-ve-atıf)
+- [Lisans](#lisans)
 - [English summary](#english-summary)
 
 ---
@@ -398,6 +399,20 @@ Space-Track ham kayıtları kullanım koşulları gereği bu depoda paylaşılma
 
 ---
 
+## Lisans
+
+Kod, belgeler, grafikler ve ekran görüntüleri [MIT Lisansı](LICENSE) ile paylaşılır.
+
+Depodaki üçüncü taraf verileri kendi lisanslarına tabidir:
+
+| Dosyalar | Kaynak | Lisans |
+|---|---|---|
+| `data/satcat.tsv`, `auxcat.tsv`, `ftocat.tsv` | GCAT, J. McDowell | CC BY 4.0 |
+| `data/kp.txt` | GFZ Potsdam | CC BY 4.0 |
+| `presentation/geo/`, `deploy/site/geo/` | Natural Earth (world-atlas) | Kamu malı (ISC) |
+
+---
+
 ## English summary
 
 **Storm & Orbit** is an open data-science project on how solar storms lower objects in low Earth orbit, with an interactive bilingual 3D presentation at **https://storm-and-orbit.up.railway.app**.
@@ -416,3 +431,5 @@ Space-Track ham kayıtları kullanım koşulları gereği bu depoda paylaşılma
 **Method:** per-object Theil–Sen pre-storm trends, a fully symmetric placebo week 16 days earlier, week-level log-linear models per altitude band, and storm-level bootstrap intervals; validated on synthetic data with a known effect. Details (in Turkish) in [docs/YONTEM.md](docs/YONTEM.md).
 
 **Reproduce:** `pip install -r requirements.txt`, `python download_data.py`, `python analysis.py`; the orbit analysis needs a free Space-Track account (`st_plan.py` → `spacetrack_fetch.py` → `altitude.py`). Raw Space-Track records are not redistributed, per its terms of use.
+
+**License:** code, docs, figures and screenshots under the [MIT License](LICENSE); the bundled GCAT and GFZ data under CC BY 4.0.
