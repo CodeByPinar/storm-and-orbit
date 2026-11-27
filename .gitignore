@@ -1,11 +1,11 @@
-# Ham veriler: download_data.py ile yeniden indirilir
-data/*.tsv
-data/kp.txt
-# Space-Track yörünge kayıtları: koşulları gereği paylaşılmaz
+# Space-Track yörünge kayıtları: kullanım koşulları gereği paylaşılmaz
 data/spacetrack/
 
 # Yerel test kopyası (build_data.py üretir)
 presentation/preview.html
+
+# Ekran görüntüsü aracı bağımlılıkları
+node_modules/
 
 # Ortam ve gizli bilgiler
 .env

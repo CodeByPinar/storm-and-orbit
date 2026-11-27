@@ -4,14 +4,16 @@
 Çıktı:     results_alt.json  ve  dash_data/alt_*.json
 
 Her obje ve her fırtına için:
-  1. Fırtınadan önceki [-30, -3]. günlerde irtifanın normal alçalma hızı (Theil-Sen eğimi).
+  1. Fırtınadan önceki [-14, -3]. günlerde irtifanın normal alçalma hızı (Theil-Sen eğimi).
   2. Fırtına haftasında [-2, +5] gerçekte kaybedilen irtifa.
   3. Oran = gerçek kayıp / normal hızla beklenen kayıp.  1 = fırtına etkisiz.
      "Kayıp gün" = fazladan kaybedilen irtifanın kaç günlük normal alçalmaya denk geldiği.
-  4. Aynı ölçüm, fırtınasız bir sahte tarihte (-16. gün; ön pencere [-35,-19]) tekrarlanır:
+  4. Aynı ölçüm, fırtınasız bir sahte tarihte (-16. gün; ön pencere [-30, -19]) tekrarlanır:
      plasebo. Gerçek etki = fırtına oranı ile plasebo oranı arasındaki fark.
-Model: log(oran) ~ fırtına gücü (3 günlük Ap toplamı) + irtifa + Güneş aktivitesi,
-obje kümelerinin fırtınaya göre gruplandığı (cluster) bootstrap ile güven aralığı.
+Birim obje değil penceredir (aynı haftadaki objeler birlikte dalgalanır): her olay için bir
+fırtına ve bir plasebo penceresi, her birinde ortanca oran.
+Model: log(ortanca oran) ~ ΔAp/10 + ΔF10.7/10 (pencerenin ön pencereye göre artışı), tüm
+bantlar ve üç irtifa bandı için ayrı; güven aralıkları olaylar yeniden örneklenerek (2.000 kez).
 """
 import json
 import sys
