@@ -1,0 +1,22 @@
+# Ham veriler: download_data.py ile yeniden indirilir
+data/*.tsv
+data/kp.txt
+# Space-Track yörünge kayıtları: koşulları gereği paylaşılmaz
+data/spacetrack/
+
+# Yerel test kopyası (build_data.py üretir)
+presentation/preview.html
+
+# Ortam ve gizli bilgiler
+.env
+.env.*
+.venv/
+venv/
+__pycache__/
+*.pyc
+.claude/
+.railway/
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store

@@ -1,0 +1,663 @@
+<meta name="dash-one-writer">
+<meta name="dash-form" content="freeform">
+<style>
+  .fy { max-width: 980px; margin: 0 auto; display: flex; flex-direction: column; gap: var(--cds-gap-xl); }
+  .fy h1 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: clamp(2rem, 5vw, 2.9rem); line-height: 1.1; margin: 0; text-wrap: balance; }
+  .fy h2 { font-size: var(--cds-font-size-title); font-weight: var(--cds-font-weight-medium); margin: 0; text-wrap: balance; }
+  .fy h3 { font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); margin: 0; }
+  .fy p { margin: 0; max-width: 68ch; line-height: 1.6; }
+  .fy-eyebrow { font-size: var(--cds-font-size-caption); letter-spacing: .08em; text-transform: uppercase; color: var(--color-fg-muted); }
+  .fy-head { display: flex; flex-direction: column; gap: var(--cds-gap-md); }
+  .fy-lede { font-size: 1.12rem; }
+  .fy-sec { display: flex; flex-direction: column; gap: var(--cds-gap-md); }
+  .fy-muted { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+  .fy b, .fy-num { font-variant-numeric: tabular-nums; }
+
+  .fy-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--cds-gap-md); }
+  .fy-tile { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-lg); display: flex; flex-direction: column; gap: var(--cds-gap-xs); min-width: 0; }
+  .fy-tile-k { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); letter-spacing: .04em; text-transform: uppercase; }
+  .fy-tile-v { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: 2.4rem; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .fy-tile-s { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); line-height: 1.5; }
+  .fy-tag { display: inline-block; font-size: var(--cds-font-size-caption); padding: 1px 8px; border-radius: 999px; border: 1px solid var(--color-border-line); width: fit-content; }
+  .fy-tag-ok { color: var(--color-ok); } .fy-tag-warn { color: var(--color-warn); }
+
+  .fy-card { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-lg); display: flex; flex-direction: column; gap: var(--cds-gap-sm); min-width: 0; }
+  .fy-chart { position: relative; width: 100%; min-height: 200px; }
+  .fy-chart svg { display: block; overflow: visible; }
+  .fy-chart text { fill: var(--cds-text-secondary); font-size: var(--cds-font-size-caption); font-family: var(--font-anthropic-sans); }
+  .fy-chart .tick line { stroke: var(--cds-chart-grid); }
+  .fy-chart .domain { stroke: var(--cds-chart-axis); }
+  .fy-chart .fy-vlab { fill: var(--color-fg); font-variant-numeric: tabular-nums; }
+  .fy-legend { display: flex; flex-wrap: wrap; gap: var(--cds-gap-md); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); list-style: none; margin: 0; padding: 0; }
+  .fy-legend li { display: flex; align-items: center; gap: 6px; }
+  .fy-sw { width: 14px; height: 3px; border-radius: 2px; display: inline-block; }
+  .fy-sw-box { height: 10px; }
+  .fy-tip { position: absolute; pointer-events: none; background: var(--cds-surface-popover); border: 1px solid var(--cds-border); box-shadow: var(--cds-shadow-popover); border-radius: var(--cds-radius); padding: 8px 10px; font-size: var(--cds-font-size-caption); line-height: 1.5; white-space: nowrap; z-index: 2; font-variant-numeric: tabular-nums; }
+  .fy-tip b { display: block; color: var(--color-fg); }
+  .fy-tip span { display: block; color: var(--cds-text-secondary); }
+  .fy-two { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--cds-gap-md); }
+  .fy-cap { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); font-weight: var(--cds-font-weight-medium); }
+
+  .fy-tw { overflow-x: auto; }
+  .fy-table { width: 100%; border-collapse: collapse; font-size: var(--cds-font-size-body); font-variant-numeric: tabular-nums; }
+  .fy-table th { text-align: left; font-weight: var(--cds-font-weight-medium); color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); padding: 6px 10px; border-bottom: 1px solid var(--color-border-line); white-space: nowrap; }
+  .fy-table td { padding: 7px 10px; border-bottom: 1px solid var(--color-border-line); white-space: nowrap; }
+  .fy-table .r { text-align: right; }
+  .fy-hi { color: var(--color-warn); font-weight: var(--cds-font-weight-medium); }
+
+  .fy details { border-top: 1px solid var(--color-border-line); padding-top: var(--cds-pad-md); }
+  .fy summary { cursor: pointer; font-weight: var(--cds-font-weight-medium); }
+  .fy details ul { margin: var(--cds-gap-sm) 0 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 6px; max-width: 72ch; line-height: 1.55; }
+</style>
+
+<article class="fy" data-read lang="tr">
+  <header class="fy-head" id="baslik">
+    <p class="fy-eyebrow">Uzay havası · Alçak Dünya yörüngesi · 1965–2026</p>
+    <h1>Fırtına ve Yörünge</h1>
+    <p class="fy-lede">Güneş en aktif dönemindeyken alçak yörüngedeki kontrolsüz objeler, sakin döneme göre yaklaşık <b class="dash-skeleton" data-draw="num" data-fmt="x2" data-source="summary" data-field="max_vs_min_ratio" data-row="0">—</b> kat hızlı düşüyor. Tek bir büyük fırtına düşen obje sayısını belirgin değiştirmiyor, ama yörüngeleri ölçülebilir biçimde alçaltıyor: Mayıs 2024 fırtınasında objeler bir haftada <b class="dash-skeleton" data-draw="num" data-fmt="f1" data-source="alt_summary" data-field="may24_lost_days" data-row="0">—</b> günlük normal alçalma kadar fazladan irtifa kaybetti.</p>
+  </header>
+
+  <section class="fy-tiles" id="ozet" aria-label="Ana bulgular">
+    <div class="fy-tile" id="kart-dongu">
+      <span class="fy-tile-k">Güneş döngüsü</span>
+      <span class="fy-tile-v"><span class="dash-skeleton" data-draw="num" data-fmt="x2" data-source="summary" data-field="max_vs_min_ratio" data-row="0">—</span>×</span>
+      <span class="fy-tile-s">Güneş maksimumunda (F10.7 ≈ <b data-draw="num" data-fmt="f0" data-source="summary" data-field="f107_hi" data-row="0">—</b> sfu) yıllık düşme oranının minimuma (≈ <b data-draw="num" data-fmt="f0" data-source="summary" data-field="f107_lo" data-row="0">—</b> sfu) oranı. Spearman r = <b data-draw="num" data-fmt="r2" data-source="summary" data-field="spearman_r" data-row="0">—</b>.</span>
+      <span class="fy-tag fy-tag-ok">Güçlü kanıt</span>
+    </div>
+    <div class="fy-tile" id="kart-firtina">
+      <span class="fy-tile-k">Büyük fırtına sonrası 14 gün</span>
+      <span class="fy-tile-v dash-skeleton" data-draw="num" data-fmt="spct1" data-source="summary" data-field="excess_pct" data-row="0">—</span>
+      <span class="fy-tile-s">Ap ≥ 100 olan <b data-draw="num" data-fmt="int" data-source="summary" data-field="n_storms" data-row="0">—</b> fırtınada, aynı Güneş aktivitesindeki sakin günlere göre fazla yeniden giriş. %95 aralık <b data-draw="num" data-fmt="spct1" data-source="summary" data-field="ci_lo_pct" data-row="0">—</b> ile <b data-draw="num" data-fmt="spct1" data-source="summary" data-field="ci_hi_pct" data-row="0">—</b>, sıfırı içeriyor; p = <b data-draw="num" data-fmt="p3" data-source="summary" data-field="p_value" data-row="0">—</b>.</span>
+      <span class="fy-tag fy-tag-warn">Zayıf, sınırda kanıt</span>
+    </div>
+    <div class="fy-tile" id="kart-starlink">
+      <span class="fy-tile-k">Starlink, 3 Şubat 2022</span>
+      <span class="fy-tile-v"><span class="dash-skeleton" data-draw="num" data-fmt="int" data-source="starlink_launches" data-field="lost30" data-where="tag=2022-010">—</span> / <span class="dash-skeleton" data-draw="num" data-fmt="int" data-source="starlink_launches" data-field="n" data-where="tag=2022-010">—</span></span>
+      <span class="fy-tile-s">Fırlatmadan sonraki ilk hafta Kp <b data-draw="num" data-fmt="f1" data-source="starlink_launches" data-field="kp_max7" data-where="tag=2022-010">—</b>'e çıktı. Uydular <b data-draw="num" data-fmt="f0" data-source="starlink_launches" data-field="perigee_med" data-where="tag=2022-010">—</b> km perigeeyle bırakılmıştı ve çoğu bir hafta içinde düştü.</span>
+      <span class="fy-tag fy-tag-warn">Tek olay</span>
+    </div>
+  </section>
+
+  <section class="fy-sec" id="dongu">
+    <h2>Güneş aktifken yörünge çabuk boşalıyor</h2>
+    <p>Güneş'in morötesi ışınımı arttıkça üst atmosfer ısınıp genişler. 400 km'deki hava yoğunlaşır ve oradaki objeler daha çok sürtünmeyle karşılaşır. Aşağıdaki iki grafik aynı yılları paylaşıyor. Üsttekinde, yıl başında yörüngede olan enkaz, roket gövdesi ve parçaların yüzde kaçının o yıl içinde atmosfere girdiği var. Alttakinde Güneş aktivitesinin ölçüsü olan 10,7 cm radyo akısı (F10.7) var. Toplam <b data-draw="num" data-fmt="int" data-source="summary" data-field="n_uncontrolled_reentries" data-row="0">—</b> kontrolsüz yeniden giriş kullanıldı.</p>
+    <div class="fy-card" id="dongu-grafik">
+      <span class="fy-cap">Yıllık düşme oranı (%), kontrolsüz LEO objeleri</span>
+      <div class="fy-chart dash-skeleton" data-draw="cycle-rate" data-source="yearly"></div>
+      <span class="fy-cap">Yıllık ortalama F10.7 (sfu)</span>
+      <div class="fy-chart dash-skeleton" data-draw="cycle-f107" data-source="yearly"></div>
+      <p class="fy-muted">Her nokta bir yıl. Altı Güneş döngüsünün tepeleri iki grafikte de aynı yıllara denk geliyor. 1966–2025.</p>
+    </div>
+  </section>
+
+  <section class="fy-sec" id="firtina">
+    <h2>Büyük fırtınadan sonraki günler</h2>
+    <p>Her büyük fırtına günü (Ap ≥ 100) 0. gün kabul edildi. Önceki 30 günün yeniden giriş hızı 1 alındı ve fırtınalar üst üste bindirildi (süperpoze dönem analizi). Karşılaştırma için her fırtına, aynı Güneş aktivitesindeki rastgele sakin bir günle 2.000 kez değiştirildi. Gri bant bu rastgele denemelerin %90'ının düştüğü aralık. Gözlenen çizgi bandın üstüne çıkarsa fırtına gerçek bir fark yaratıyor demektir.</p>
+    <div class="fy-card" id="firtina-grafik">
+      <ul class="fy-legend" data-source="epoch">
+        <li><span class="fy-sw" style="background: var(--fy-c0)"></span>Fırtınalardan sonra gözlenen</li>
+        <li><span class="fy-sw fy-sw-box" style="background: var(--cds-chart-muted); opacity: .35"></span>Rastgele sakin günler, %5–95 aralığı</li>
+      </ul>
+      <div class="fy-chart dash-skeleton" data-draw="epoch" data-source="epoch" style="min-height: 280px"></div>
+      <p class="fy-muted">Yeniden giriş hızı, fırtınadan önceki 30 günün ortalamasına bölünmüş; 7 günlük yürüyen ortalama. Kesik çizgi: rastgele denemelerin ortancası.</p>
+    </div>
+    <div class="fy-two">
+      <div class="fy-card" id="doz-grafik">
+        <h3>Fırtına şiddetine göre fazla</h3>
+        <p class="fy-muted">0–14 günde, rastgele sakin günlere göre fazla yeniden giriş ve %95 aralığı.</p>
+        <div class="fy-chart dash-skeleton" data-draw="dose" data-source="dose"></div>
+      </div>
+      <div class="fy-card" id="en-guclu">
+        <h3>En güçlü 10 fırtına</h3>
+        <p class="fy-muted">Sonraki 14 günde düşen kontrolsüz obje sayısı ve önceki 30 günün hızına göre beklenen.</p>
+        <div class="fy-tw">
+          <table class="fy-table" data-source="top_storms" data-row-key="date">
+            <thead><tr><th data-field="date">Tarih</th><th class="r" data-field="ap">Ap</th><th class="r" data-field="after14">Düşen</th><th class="r" data-field="expected14">Beklenen</th></tr></thead>
+            <tbody data-draw="storms"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <p>Mayıs 2024 fırtınası 1960'tan beri en güçlü ikinci gün. Yine de sonraki iki haftada düşen obje sayısı neredeyse beklenen kadar kaldı. Fırtına atmosferi yalnızca bir iki gün şişiriyor. Zaten düşmek üzere olan birkaç objeyi biraz öne çekiyor, ama yıllarca süren yavaş alçalmanın yanında bu küçük kalıyor.</p>
+  </section>
+
+  <section class="fy-sec" id="starlink">
+    <h2>Starlink: fırtınanın asıl tehlikesi ilk günler</h2>
+    <p>Starlink uyduları önce çok alçak bir yörüngeye bırakılır, sonra kendi motorlarıyla yükselir. Bu ilk günlerde atmosfere en yakın oldukları için en savunmasız oldukları zamandır. Burada <b data-draw="num" data-fmt="int" data-source="summary" data-field="sl_launches" data-row="0">—</b> fırlatmada <b data-draw="num" data-fmt="int" data-source="summary" data-field="sl_sats" data-row="0">—</b> uydu incelendi ve ilk 30 günde düşenler sayıldı. Yörüngeye ulaşamayan uçuşlar ile Temmuz 2024'teki roket arızası dışarıda bırakıldı.</p>
+    <div class="fy-card" id="starlink-grafik">
+      <ul class="fy-legend" data-source="starlink_kp">
+        <li><span class="fy-sw fy-sw-box" style="background: var(--fy-c0)"></span>Normal bırakma</li>
+        <li><span class="fy-sw fy-sw-box" style="background: var(--fy-c1)"></span>Alçak bırakma (perigee &lt; 250 km)</li>
+      </ul>
+      <div class="fy-chart dash-skeleton" data-draw="slkp" data-source="starlink_kp" style="min-height: 240px"></div>
+      <p class="fy-muted">İlk 30 günde kaybedilen uyduların yüzdesi; gruplar fırlatmadan sonraki 7 gündeki en yüksek Kp'ye göre.</p>
+    </div>
+    <p>Alçak bırakılıp ilk haftası fırtınalı geçen fırlatmalarda kayıp oranı <b data-draw="num" data-fmt="pct2" data-source="summary" data-field="sl_storm_pct" data-row="0">—</b>, sakin geçenlerde <b data-draw="num" data-fmt="pct2" data-source="summary" data-field="sl_calm_pct" data-row="0">—</b> (Fisher testi p = <b data-draw="num" data-fmt="sci" data-source="summary" data-field="sl_fisher_p" data-row="0">—</b>). Bu farkın neredeyse tamamı Şubat 2022'den geliyor. O fırlatma çıkarılınca fırtınalı grupta oran <b data-draw="num" data-fmt="pct2" data-source="summary" data-field="sl_storm_wo_pct" data-row="0">—</b>'e iniyor ve sakin gruptan ayırt edilemiyor. Veride bu tek, büyük bir kaza olarak görünüyor ve sonrasında tekrarlanmamış.</p>
+    <div class="fy-card" id="starlink-tablo">
+      <h3>En çok kayıp veren 6 fırlatma</h3>
+      <div class="fy-tw">
+        <table class="fy-table" data-source="starlink_launches" data-row-key="tag">
+          <thead><tr><th data-field="tag">Fırlatma</th><th data-field="date">Tarih</th><th class="r" data-field="lost30">Kayıp</th><th class="r" data-field="n">Uydu</th><th class="r" data-field="kp_max7">İlk hafta Kp</th><th class="r" data-field="perigee_med">Perigee (km)</th></tr></thead>
+          <tbody data-draw="sltop"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="fy-sec" id="irtifa">
+    <h2>Fırtına haftasında yörüngeler ne kadar alçalıyor?</h2>
+    <p>Düşen obje sayısı kaba bir ölçü: bir obje ancak yıllarca alçaldıktan sonra düşer. Daha hassas test için Space-Track'in tarihsel yörünge kayıtlarıyla 2000'den bu yana <b data-draw="num" data-fmt="int" data-source="alt_summary" data-field="n_events" data-row="0">—</b> fırtınada <b data-draw="num" data-fmt="int" data-source="alt_summary" data-field="n_objects" data-row="0">—</b> obje ölçüldü. Her objenin fırtınadan önceki 11 gündeki (−14…−3) alçalma hızı, fırtına haftasında (−2…+5) gerçekte kaybettiği irtifayla karşılaştırıldı. Oran 1 ise fırtına etkisiz demektir. Aynı ölçüm her objede fırtınadan 16 gün önceki bir haftada da tekrarlandı; bu plasebo, fırtına yokken ne çıktığını gösteriyor.</p>
+    <div class="fy-tiles">
+      <div class="fy-tile" id="kart-oran">
+        <span class="fy-tile-k">Fırtına haftası alçalma oranı</span>
+        <span class="fy-tile-v"><span class="dash-skeleton" data-draw="num" data-fmt="r2" data-source="alt_summary" data-field="storm_median" data-row="0">—</span>×</span>
+        <span class="fy-tile-s">Plasebo haftalarında <b data-draw="num" data-fmt="r2" data-source="alt_summary" data-field="placebo_median" data-row="0">—</b>×. <b data-draw="num" data-fmt="int" data-source="alt_summary" data-field="n_higher" data-row="0">—</b> / <b data-draw="num" data-fmt="int" data-source="alt_summary" data-field="n_paired" data-row="0">—</b> fırtınada alçalma, aynı objelerin plasebo haftasından hızlı; Wilcoxon p = <b data-draw="num" data-fmt="sci" data-source="alt_summary" data-field="wilcoxon_p" data-row="0">—</b>.</span>
+        <span class="fy-tag fy-tag-ok">Güçlü kanıt</span>
+      </div>
+      <div class="fy-tile" id="kart-doz">
+        <span class="fy-tile-k">Ap'de her +10</span>
+        <span class="fy-tile-v dash-skeleton" data-draw="num" data-fmt="spct1" data-source="alt_summary" data-field="ap_pct" data-row="0">—</span>
+        <span class="fy-tile-s">daha hızlı alçalma; %95 aralık <b data-draw="num" data-fmt="spct1" data-source="alt_summary" data-field="ap_pct_lo" data-row="0">—</b> ile <b data-draw="num" data-fmt="spct1" data-source="alt_summary" data-field="ap_pct_hi" data-row="0">—</b>. F10.7'deki her +10 sfu ayrıca <b data-draw="num" data-fmt="spct1" data-source="alt_summary" data-field="f107_pct" data-row="0">—</b> ekliyor. R² = <b data-draw="num" data-fmt="r2" data-source="alt_summary" data-field="r2" data-row="0">—</b>.</span>
+        <span class="fy-tag fy-tag-ok">Doz-yanıt ilişkisi</span>
+      </div>
+      <div class="fy-tile" id="kart-mayis">
+        <span class="fy-tile-k">Mayıs 2024 süper fırtınası</span>
+        <span class="fy-tile-v"><span class="dash-skeleton" data-draw="num" data-fmt="f1" data-source="alt_summary" data-field="may24_lost_days" data-row="0">—</span> gün</span>
+        <span class="fy-tile-s">Bir haftada fazladan kaybedilen irtifa, normal alçalma hızıyla kaç güne denk geliyor (<b data-draw="num" data-fmt="int" data-source="alt_summary" data-field="may24_n" data-row="0">—</b> obje, ortanca). Cadılar Bayramı 2003'te <b data-draw="num" data-fmt="f1" data-source="alt_summary" data-field="hw03_lost_days" data-row="0">—</b> gün.</span>
+        <span class="fy-tag">Ortanca obje</span>
+      </div>
+    </div>
+
+    <div class="fy-card" id="irtifa-dagilim">
+      <h3>Ap ne kadar artarsa yörünge o kadar hızlı alçalıyor</h3>
+      <ul class="fy-legend" data-source="alt_windows alt_grid">
+        <li><span class="fy-sw fy-sw-box" style="background: var(--fy-c0); border-radius: 50%; width: 10px"></span>Fırtına haftası</li>
+        <li><span class="fy-sw fy-sw-box" style="background: var(--fy-c1); border-radius: 50%; width: 10px"></span>Plasebo haftası</li>
+        <li><span class="fy-sw" style="background: var(--color-fg)"></span>Model ve %95 aralığı</li>
+      </ul>
+      <div class="fy-chart dash-skeleton" data-draw="alt-scatter" data-source="alt_windows alt_grid" style="min-height: 300px"></div>
+      <p class="fy-muted">Her nokta bir hafta ve içindeki objelerin ortanca oranı. Yatay eksen: o haftanın ortalama Ap'sinin önceki 11 güne göre artışı. Dikey eksen logaritmik.</p>
+    </div>
+
+    <div class="fy-two">
+      <div class="fy-card" id="irtifa-egri">
+        <h3>Fırtınadan sonra gün gün fazladan alçalma</h3>
+        <ul class="fy-legend" data-source="alt_curves">
+          <li><span class="fy-sw" style="background: var(--fy-c0)"></span>Orta (Ap 50–80)</li>
+          <li><span class="fy-sw" style="background: var(--fy-c1)"></span>Güçlü (Ap 80–130)</li>
+          <li><span class="fy-sw" style="background: var(--fy-c2)"></span>Şiddetli (Ap &gt; 130)</li>
+        </ul>
+        <div class="fy-chart dash-skeleton" data-draw="alt-curves" data-source="alt_curves" style="min-height: 240px"></div>
+        <p class="fy-muted">Fırtına öncesi eğilime göre fazladan kaybedilen irtifa, günlük normal alçalma cinsinden; ortanca obje.</p>
+      </div>
+      <div class="fy-card" id="irtifa-bant">
+        <h3>Yükseklerde etki daha büyük</h3>
+        <p class="fy-muted">Ap'deki her +10 artışın alçalma hızına etkisi, irtifa bandına göre, %95 aralığıyla.</p>
+        <div class="fy-chart dash-skeleton" data-draw="alt-coef" data-source="alt_coef"></div>
+        <p class="fy-muted">Üst atmosferin seyrek katmanları fırtınada oransal olarak daha çok şişer.</p>
+      </div>
+    </div>
+
+    <div class="fy-card" id="irtifa-tablo">
+      <h3>En güçlü 8 fırtına</h3>
+      <div class="fy-tw">
+        <table class="fy-table" data-source="alt_events" data-row-key="event">
+          <thead><tr><th data-field="event">Tarih</th><th class="r" data-field="ap_peak">Ap</th><th class="r" data-field="d_ap">Ap artışı</th><th class="r" data-field="ratio">Oran</th><th class="r" data-field="placebo_ratio">Plasebo</th><th class="r" data-field="lost_days">Kayıp gün</th></tr></thead>
+          <tbody data-draw="altev"></tbody>
+        </table>
+      </div>
+    </div>
+    <p>Bir uyarı: büyük fırtınalar çoğunlukla Güneş'in parlak aktif bölgelerinden gelir, bu yüzden fırtına haftalarında morötesi ışınım da artar. Model bu iki etkiyi ayrı ayrı tahmin ediyor. En büyük kayıplar ikisinin aynı haftaya denk geldiği fırtınalarda görülüyor: Cadılar Bayramı 2003 ve Mayıs 2024. Temmuz 2004 gibi Ap'si yüksek ama Güneş ışınımı düşen fırtınalarda etki çok daha küçük kalmış.</p>
+  </section>
+
+  <details id="yontem">
+    <summary>Yöntem, veri ve sınırlar</summary>
+    <ul>
+      <li><b>Veri.</b> Uydu ve enkaz kataloğu: Jonathan McDowell'ın GCAT'ı (satcat ve auxcat birlikte; auxcat, katalog numarası almadan düşen objeleri içerir). Jeomanyetik indeksler ve F10.7: GFZ Potsdam'ın 1932'den bugüne günlük Kp/Ap dosyası.</li>
+      <li><b>Kontrolsüz obje.</b> Enkaz, roket gövdesi ve parçalar. Motorları olmadığı için düşüş zamanlarını yalnızca atmosfer belirler. Uydular, kontrollü yörüngeden çıkarma yapılabildiği için ilk iki analizin dışında tutuldu.</li>
+      <li><b>Yıllık düşme oranı.</b> Yıl içinde yeniden giren objelerin, yıl başında yörüngede olan kontrolsüz objelere oranı. Maksimum/minimum katsayısı, oranın F10.7'ye doğrusal regresyonundan, F10.7'nin %10 ve %90'lık değerlerinde hesaplandı.</li>
+      <li><b>Fırtına testi.</b> Ap ≥ 100 günler 30 günlük aralıkla tekilleştirildi. Rastgele karşılaştırma günleri, 21 gün boyunca Ap &lt; 40 olan ve 81 günlük ortalama F10.7'si fırtınanınkine ±15 sfu yakın günlerden seçildi. p değeri, rastgele denemelerin gözlenen 0–14 gün oranına eşit ya da büyük çıkma payı.</li>
+      <li><b>Sınırlar.</b> Eski yeniden giriş tarihleri çoğu zaman birkaç gün belirsizlikle kaydedilmiş. Bu, kısa süreli fırtına etkisini bulanıklaştırır ve fırtına etkisinin gerçekte buradakinden biraz büyük olabileceği anlamına gelir. Starlink perigee değerleri katalogdaki yörünge kaydından alındı ve bırakılma irtifasının yaklaşık bir göstergesi.</li>
+      <li><b>İrtifa analizi.</b> Space-Track.org'un tarihsel yörünge kayıtlarından (GP history), 2000'den bu yana Ap ≥ 50 olan her fırtına tepesi için −35…+25 günlük pencere indirildi. Her pencerede GCAT'e göre alçak ve dairesel yörüngedeki en fazla 400 kontrolsüz obje kullanıldı. İrtifa ortalama hareketten hesaplandı; 1 km'den büyük kayıt sıçramaları atıldı. Oran yalnızca haftada en az 35 m alçalan objelerde hesaplandı.</li>
+      <li><b>İrtifa modeli.</b> Aynı haftadaki objeler birlikte dalgalandığı için bağımsız birim obje değil haftadır. Her fırtına için bir fırtına, bir plasebo haftası alındı. Ortanca oranın logaritması, Ap ve F10.7'nin önceki 11 güne göre artışıyla açıklandı. Güven aralıkları fırtınalar yeniden örneklenerek (2.000 kez) hesaplandı. Yöntem, etkisi bilinen yapay veriyle sınandı.</li>
+      <li><b>Lisans.</b> Space-Track verisi yeniden dağıtılamadığı için ham yörünge kayıtları bu sayfada yok; yalnızca hesaplanan özetler var.</li>
+    </ul>
+  </details>
+</article>
+
+<script>
+window.fy = (() => {
+  const L = d3.formatLocale({ decimal: ",", thousands: ".", grouping: [3], currency: ["", ""] });
+  const sup = { "-": "⁻", "0": "⁰", "1": "¹", "2": "²", "3": "³", "4": "⁴", "5": "⁵", "6": "⁶", "7": "⁷", "8": "⁸", "9": "⁹" };
+  const sign = (v, s) => (v > 0 ? "+" : v < 0 ? "−" : "") + s;
+  const fmt = {
+    x2: (v) => L.format(".1f")(v),
+    r2: (v) => L.format(".2f")(v),
+    p3: (v) => L.format(".3f")(v),
+    int: (v) => L.format(",d")(v),
+    f0: (v) => L.format(".0f")(v),
+    f1: (v) => L.format(".1f")(v),
+    pct2: (v) => "%" + L.format(".2f")(v),
+    spct1: (v) => sign(v, "%" + L.format(".1f")(Math.abs(v))),
+    sci: (v) => {
+      if (v >= 0.001) return L.format(".3f")(v);
+      const [m, e] = v.toExponential(1).split("e");
+      return m.replace(".", ",") + " × 10" + String(+e).split("").map((c) => sup[c]).join("");
+    },
+  };
+  const months = ["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"];
+  const day = (s) => { const [y, m, d] = s.split("-"); return `${+d} ${months[+m - 1]} ${y}`; };
+
+  function findRow(el) {
+    const d = dash.data(el.dataset.source);
+    if (d.status !== "ok") return { status: d.status };
+    let r;
+    if (el.dataset.where) {
+      const [k, v] = el.dataset.where.split("=");
+      r = d.data.find((x) => String(x[k]) === decodeURIComponent(v));
+    } else r = d.data[+(el.dataset.row || 0)];
+    return { status: "ok", r };
+  }
+
+  // Bir çizimin ortak başlangıcı: yükleniyorsa dokunma, hata varsa yerinde söyle.
+  function ready(el, id) {
+    const d = dash.data(id);
+    if (d.status === "loading") return null;
+    el.classList.remove("dash-skeleton");
+    if (d.status !== "ok") {
+      const p = document.createElement("p");
+      p.className = "fy-muted";
+      p.textContent = d.status === "error" ? "Bu grafiğin verisi yüklenemedi." : "—";
+      el.replaceChildren(p);
+      return null;
+    }
+    return d.data;
+  }
+
+  function tip(el) {
+    const t = document.createElement("div");
+    t.className = "fy-tip";
+    t.hidden = true;
+    el.appendChild(t);
+    return {
+      show(x, y, title, lines) {
+        const b = document.createElement("b");
+        b.textContent = title;
+        t.replaceChildren(b, ...lines.map((s) => { const sp = document.createElement("span"); sp.textContent = s; return sp; }));
+        t.hidden = false;
+        const W = el.clientWidth, tw = t.offsetWidth;
+        t.style.left = Math.max(0, Math.min(W - tw, x + 12)) + "px";
+        t.style.top = Math.max(0, y - t.offsetHeight - 8) + "px";
+      },
+      hide() { t.hidden = true; },
+    };
+  }
+
+  // Y ekseninin en geniş etiketine göre sol boşluk
+  function yAxis(svg, y, H, mt, mb, tickFmt, ticks) {
+    const g = svg.append("g").call(d3.axisLeft(y).ticks(ticks).tickFormat(tickFmt).tickSize(0));
+    let w = 0;
+    g.selectAll("text").each(function () { w = Math.max(w, this.getComputedTextLength()); });
+    return { g, ml: Math.ceil(w) + 12 };
+  }
+
+  function lineChart(el, o) {
+    const rows = ready(el, o.source);
+    if (!rows) return;
+    const data = rows.filter((r) => r[o.y] != null);
+    const W = el.clientWidth, H = o.height || 190, mt = 10, mr = 16, mb = 26;
+    el.replaceChildren();
+    const svg = d3.select(el).append("svg").attr("width", W).attr("height", H).attr("role", "img").attr("aria-label", o.label);
+    const y = d3.scaleLinear().domain([0, d3.max(data, (r) => r[o.y])]).nice().range([H - mb, mt]);
+    const ya = yAxis(svg, y, H, mt, mb, o.yTick, 4);
+    const ml = ya.ml;
+    ya.g.attr("transform", `translate(${ml - 6},0)`).call((g) => g.select(".domain").remove());
+    const x = d3.scaleLinear().domain(d3.extent(data, (r) => r[o.x])).range([ml, W - mr]);
+    svg.append("g").attr("class", "fy-grid").selectAll("line").data(y.ticks(4)).join("line")
+      .attr("x1", ml).attr("x2", W - mr).attr("y1", (v) => y(v)).attr("y2", (v) => y(v))
+      .style("stroke", "var(--cds-chart-grid)");
+    svg.append("g").attr("transform", `translate(0,${H - mb})`)
+      .call(d3.axisBottom(x).ticks(Math.max(3, Math.floor((W - ml) / 80))).tickFormat(d3.format("d")).tickSizeOuter(0));
+    svg.append("path").datum(data).attr("d", d3.line().x((r) => x(r[o.x])).y((r) => y(r[o.y])))
+      .style("fill", "none").style("stroke", o.color).style("stroke-width", 2);
+    const cross = svg.append("line").attr("y1", mt).attr("y2", H - mb).style("stroke", "var(--cds-chart-reference)").attr("visibility", "hidden");
+    const dot = svg.append("circle").attr("r", 4.5).style("fill", o.color).style("stroke", "var(--color-panel)").style("stroke-width", 2).attr("visibility", "hidden");
+    const tt = tip(el);
+    svg.append("rect").attr("x", ml).attr("y", 0).attr("width", Math.max(0, W - mr - ml)).attr("height", H).style("fill", "transparent")
+      .on("pointermove", (ev) => {
+        const [px] = d3.pointer(ev);
+        const r = d3.least(data, (d) => Math.abs(x(d[o.x]) - px));
+        cross.attr("x1", x(r[o.x])).attr("x2", x(r[o.x])).attr("visibility", "visible");
+        dot.attr("cx", x(r[o.x])).attr("cy", y(r[o.y])).attr("visibility", "visible");
+        tt.show(x(r[o.x]), y(r[o.y]), String(r[o.x]), o.tipLines(r));
+      })
+      .on("pointerleave", () => { cross.attr("visibility", "hidden"); dot.attr("visibility", "hidden"); tt.hide(); });
+  }
+
+  return { L, fmt, day, findRow, ready, tip, yAxis, lineChart };
+})();
+
+// Paletteki ilk iki seri rengini CSS'e taşı (lejant kutucukları için)
+document.querySelectorAll(".fy").forEach((n) => {
+  n.style.setProperty("--fy-c0", dash.colors[0]);
+  n.style.setProperty("--fy-c1", dash.colors[1]);
+  n.style.setProperty("--fy-c2", dash.colors[2]);
+});
+
+dash.draw("num", (el) => {
+  const { status, r } = fy.findRow(el);
+  if (status === "loading") { el.textContent = "—"; return; }
+  el.classList.remove("dash-skeleton");
+  const v = status === "ok" && r ? r[el.dataset.field] : null;
+  el.textContent = v == null ? "—" : fy.fmt[el.dataset.fmt || "f1"](v);
+});
+
+dash.draw("cycle-rate", (el) => fy.lineChart(el, {
+  source: "yearly", x: "year", y: "rate_pct", color: dash.colors[0], height: 200,
+  label: "Kontrolsüz LEO objelerinin yıllık düşme oranı, 1966–2025",
+  yTick: (v) => "%" + fy.L.format(".0f")(v),
+  tipLines: (r) => [
+    "Düşme oranı: %" + fy.L.format(".1f")(r.rate_pct),
+    "Düşen: " + fy.L.format(",d")(r.reentries) + " / " + fy.L.format(",d")(r.pop),
+    "F10.7: " + fy.L.format(".0f")(r.f107) + " sfu",
+  ],
+}));
+
+dash.draw("cycle-f107", (el) => fy.lineChart(el, {
+  source: "yearly", x: "year", y: "f107", color: dash.colors[1], height: 160,
+  label: "Yıllık ortalama F10.7 Güneş radyo akısı, 1966–2025",
+  yTick: (v) => fy.L.format(".0f")(v),
+  tipLines: (r) => ["F10.7: " + fy.L.format(".0f")(r.f107) + " sfu", "Ortalama Ap: " + fy.L.format(".1f")(r.ap)],
+}));
+
+dash.draw("epoch", (el) => {
+  const rows = fy.ready(el, "epoch");
+  if (!rows) return;
+  const W = el.clientWidth, H = 280, mt = 12, mr = 16, mb = 34;
+  el.replaceChildren();
+  const svg = d3.select(el).append("svg").attr("width", W).attr("height", H).attr("role", "img")
+    .attr("aria-label", "Büyük fırtınalardan önce ve sonra 90 günlük yeniden giriş hızı, rastgele sakin günlerle karşılaştırmalı");
+  const lo = d3.min(rows, (r) => Math.min(r.observed, r.null_lo)), hi = d3.max(rows, (r) => Math.max(r.observed, r.null_hi));
+  const y = d3.scaleLinear().domain([Math.min(0.8, lo), Math.max(1.3, hi)]).nice().range([H - mb, mt]);
+  const pf = (v) => fy.L.format(".1f")(v);
+  const ya = fy.yAxis(svg, y, H, mt, mb, pf, 5);
+  const ml = ya.ml;
+  ya.g.attr("transform", `translate(${ml - 6},0)`).call((g) => g.select(".domain").remove());
+  const x = d3.scaleLinear().domain(d3.extent(rows, (r) => r.lag)).range([ml, W - mr]);
+  svg.append("g").selectAll("line").data(y.ticks(5)).join("line")
+    .attr("x1", ml).attr("x2", W - mr).attr("y1", (v) => y(v)).attr("y2", (v) => y(v)).style("stroke", "var(--cds-chart-grid)");
+  // 0–14 gün yanıt penceresi
+  svg.append("rect").attr("x", x(0)).attr("width", x(14) - x(0)).attr("y", mt).attr("height", H - mb - mt)
+    .style("fill", "var(--cds-chart-muted)").style("opacity", 0.12);
+  svg.append("text").attr("x", x(7)).attr("y", mt + 12).attr("text-anchor", "middle").text("0–14 gün");
+  svg.append("path").datum(rows).attr("d", d3.area().x((r) => x(r.lag)).y0((r) => y(r.null_lo)).y1((r) => y(r.null_hi)))
+    .style("fill", "var(--cds-chart-muted)").style("opacity", 0.35);
+  svg.append("path").datum(rows).attr("d", d3.line().x((r) => x(r.lag)).y((r) => y(r.null_mid)))
+    .style("fill", "none").style("stroke", "var(--cds-chart-muted)").style("stroke-width", 1.5).style("stroke-dasharray", "4 3");
+  svg.append("line").attr("x1", ml).attr("x2", W - mr).attr("y1", y(1)).attr("y2", y(1)).style("stroke", "var(--cds-chart-reference)");
+  svg.append("line").attr("x1", x(0)).attr("x2", x(0)).attr("y1", mt).attr("y2", H - mb).style("stroke", "var(--cds-chart-reference)");
+  svg.append("path").datum(rows).attr("d", d3.line().x((r) => x(r.lag)).y((r) => y(r.observed)))
+    .style("fill", "none").style("stroke", dash.colors[0]).style("stroke-width", 2);
+  svg.append("g").attr("transform", `translate(0,${H - mb})`)
+    .call(d3.axisBottom(x).tickValues([-30, -15, 0, 15, 30, 45, 60]).tickFormat((v) => (v > 0 ? "+" : "") + v).tickSizeOuter(0));
+  svg.append("text").attr("x", (ml + W - mr) / 2).attr("y", H - 2).attr("text-anchor", "middle").text("Fırtınadan sonraki gün");
+  const cross = svg.append("line").attr("y1", mt).attr("y2", H - mb).style("stroke", "var(--cds-chart-reference)").attr("visibility", "hidden");
+  const dot = svg.append("circle").attr("r", 4.5).style("fill", dash.colors[0]).style("stroke", "var(--color-panel)").style("stroke-width", 2).attr("visibility", "hidden");
+  const tt = fy.tip(el);
+  svg.append("rect").attr("x", ml).attr("y", 0).attr("width", Math.max(0, W - mr - ml)).attr("height", H).style("fill", "transparent")
+    .on("pointermove", (ev) => {
+      const [px] = d3.pointer(ev);
+      const r = d3.least(rows, (d) => Math.abs(x(d.lag) - px));
+      cross.attr("x1", x(r.lag)).attr("x2", x(r.lag)).attr("visibility", "visible");
+      dot.attr("cx", x(r.lag)).attr("cy", y(r.observed)).attr("visibility", "visible");
+      tt.show(x(r.lag), y(r.observed), (r.lag > 0 ? "+" : "") + r.lag + ". gün",
+        ["Gözlenen: " + fy.L.format(".2f")(r.observed) + "×",
+         "Rastgele aralık: " + fy.L.format(".2f")(r.null_lo) + "–" + fy.L.format(".2f")(r.null_hi) + "×"]);
+    })
+    .on("pointerleave", () => { cross.attr("visibility", "hidden"); dot.attr("visibility", "hidden"); tt.hide(); });
+});
+
+dash.draw("dose", (el) => {
+  const rows = fy.ready(el, "dose");
+  if (!rows) return;
+  const W = el.clientWidth, rowH = 46, mt = 8, mb = 28, H = mt + mb + rowH * rows.length, mr = 56;
+  el.replaceChildren();
+  const svg = d3.select(el).append("svg").attr("width", W).attr("height", H).attr("role", "img")
+    .attr("aria-label", "Fırtına şiddeti gruplarına göre fazla yeniden giriş yüzdesi ve güven aralıkları");
+  const labs = svg.append("g").selectAll("text").data(rows).join("text")
+    .attr("x", 0).attr("y", (r, i) => mt + i * rowH + rowH / 2 - 3).text((r) => r.label).style("fill", "var(--color-fg)");
+  svg.append("g").selectAll("text").data(rows).join("text")
+    .attr("x", 0).attr("y", (r, i) => mt + i * rowH + rowH / 2 + 12).text((r) => r.n + " fırtına");
+  let lw = 0;
+  labs.each(function () { lw = Math.max(lw, this.getComputedTextLength()); });
+  const ml = Math.ceil(lw) + 14;
+  const x = d3.scaleLinear().domain([Math.min(-15, d3.min(rows, (r) => r.ci_lo)), Math.max(15, d3.max(rows, (r) => r.ci_hi))]).nice().range([ml, W - mr]);
+  svg.append("g").selectAll("line").data(x.ticks(4)).join("line").attr("x1", (v) => x(v)).attr("x2", (v) => x(v))
+    .attr("y1", mt).attr("y2", H - mb).style("stroke", "var(--cds-chart-grid)");
+  svg.append("line").attr("x1", x(0)).attr("x2", x(0)).attr("y1", mt).attr("y2", H - mb).style("stroke", "var(--cds-chart-reference)");
+  svg.append("g").attr("transform", `translate(0,${H - mb})`)
+    .call(d3.axisBottom(x).ticks(4).tickFormat((v) => (v > 0 ? "+" : v < 0 ? "−" : "") + "%" + Math.abs(v)).tickSizeOuter(0));
+  const tt = fy.tip(el);
+  const g = svg.append("g").selectAll("g").data(rows).join("g").attr("transform", (r, i) => `translate(0,${mt + i * rowH + rowH / 2})`);
+  g.append("line").attr("x1", (r) => x(r.ci_lo)).attr("x2", (r) => x(r.ci_hi)).style("stroke", dash.colors[0]).style("stroke-width", 2).style("stroke-linecap", "round");
+  g.append("circle").attr("cx", (r) => x(r.excess_pct)).attr("r", 5).style("fill", dash.colors[0]).style("stroke", "var(--color-panel)").style("stroke-width", 2);
+  g.append("text").attr("class", "fy-vlab").attr("x", (r) => x(r.ci_hi) + 8).attr("y", 4).text((r) => fy.fmt.spct1(r.excess_pct));
+  g.append("rect").attr("x", ml).attr("y", -rowH / 2).attr("width", Math.max(0, W - ml)).attr("height", rowH).style("fill", "transparent")
+    .on("pointermove", (ev, r) => {
+      tt.show(x(r.excess_pct), mt + rows.indexOf(r) * rowH + 10, r.label + " · " + r.n + " fırtına",
+        ["Fazla: " + fy.fmt.spct1(r.excess_pct), "%95 aralık: " + fy.fmt.spct1(r.ci_lo) + " ile " + fy.fmt.spct1(r.ci_hi), "p = " + fy.L.format(".3f")(r.p_value)]);
+    })
+    .on("pointerleave", () => tt.hide());
+});
+
+dash.draw("storms", (tb) => {
+  const d = dash.data("top_storms");
+  if (d.status !== "ok") { tb.replaceChildren(); return; }
+  tb.replaceChildren(...d.data.map((r) => {
+    const tr = document.createElement("tr");
+    tr.dataset.key = r.date;
+    const cells = [fy.day(r.date), fy.L.format(",d")(r.ap), fy.L.format(",d")(r.after14), fy.L.format(".1f")(r.expected14)];
+    cells.forEach((c, i) => {
+      const td = document.createElement("td");
+      td.textContent = c;
+      if (i > 0) td.className = "r";
+      if (i === 2 && r.after14 > r.expected14 * 1.25) td.classList.add("fy-hi");
+      tr.appendChild(td);
+    });
+    return tr;
+  }));
+});
+
+dash.draw("slkp", (el) => {
+  const rows = fy.ready(el, "starlink_kp");
+  if (!rows) return;
+  const bins = ["Kp < 4", "Kp 4–5", "Kp ≥ 5"], groups = ["Normal bırakma", "Alçak bırakma (<250 km)"];
+  const col = { [groups[0]]: dash.colors[0], [groups[1]]: dash.colors[1] };
+  const W = el.clientWidth, H = 240, mt = 22, mr = 8, mb = 28;
+  el.replaceChildren();
+  const svg = d3.select(el).append("svg").attr("width", W).attr("height", H).attr("role", "img")
+    .attr("aria-label", "Starlink ilk 30 gün kayıp yüzdesi, bırakma irtifası ve ilk hafta Kp düzeyine göre");
+  const y = d3.scaleLinear().domain([0, d3.max(rows, (r) => r.lost_pct)]).nice().range([H - mb, mt]);
+  const ya = fy.yAxis(svg, y, H, mt, mb, (v) => "%" + fy.L.format(".0f")(v), 4);
+  const ml = ya.ml;
+  ya.g.attr("transform", `translate(${ml - 6},0)`).call((g) => g.select(".domain").remove());
+  svg.append("g").selectAll("line").data(y.ticks(4)).join("line")
+    .attr("x1", ml).attr("x2", W - mr).attr("y1", (v) => y(v)).attr("y2", (v) => y(v)).style("stroke", "var(--cds-chart-grid)");
+  const x0 = d3.scaleBand().domain(bins).range([ml, W - mr]).paddingInner(0.3).paddingOuter(0.15);
+  const x1 = d3.scaleBand().domain(groups).range([0, x0.bandwidth()]).padding(0.08);
+  svg.append("g").attr("transform", `translate(0,${H - mb})`).call(d3.axisBottom(x0).tickSize(0).tickPadding(8));
+  const tt = fy.tip(el);
+  const bars = svg.append("g").selectAll("g").data(rows).join("g")
+    .attr("transform", (r) => `translate(${x0(r.kp_bin) + x1(r.group)},0)`);
+  bars.append("rect").attr("y", (r) => y(r.lost_pct)).attr("height", (r) => Math.max(1, y(0) - y(r.lost_pct)))
+    .attr("width", x1.bandwidth()).attr("rx", 3).style("fill", (r) => col[r.group]);
+  bars.append("text").attr("class", "fy-vlab").attr("x", x1.bandwidth() / 2).attr("y", (r) => y(r.lost_pct) - 6)
+    .attr("text-anchor", "middle").text((r) => "%" + fy.L.format(".1f")(r.lost_pct));
+  bars.append("rect").attr("y", mt).attr("height", H - mb - mt).attr("width", x1.bandwidth()).style("fill", "transparent")
+    .on("pointermove", (ev, r) => {
+      tt.show(x0(r.kp_bin) + x1(r.group) + x1.bandwidth() / 2, y(r.lost_pct), r.group + " · " + r.kp_bin,
+        ["Kayıp: %" + fy.L.format(".2f")(r.lost_pct), fy.L.format(",d")(r.lost) + " / " + fy.L.format(",d")(r.sats) + " uydu", r.launches + " fırlatma"]);
+    })
+    .on("pointerleave", () => tt.hide());
+});
+
+dash.draw("alt-scatter", (el) => {
+  const pts = fy.ready(el, "alt_windows");
+  if (!pts) return;
+  const gd = dash.data("alt_grid");
+  if (gd.status === "loading") return;
+  const grid = gd.status === "ok" ? gd.data.filter((r) => r.band === "Tümü") : [];
+  const W = el.clientWidth, H = 300, mt = 10, mr = 16, mb = 34;
+  el.replaceChildren();
+  const svg = d3.select(el).append("svg").attr("width", W).attr("height", H).attr("role", "img")
+    .attr("aria-label", "Haftalık Ap artışına karşı alçalma oranı; fırtına ve plasebo haftaları ile model çizgisi");
+  const y = d3.scaleLog().domain([0.35, 3.6]).range([H - mb, mt]);
+  const ticks = [0.5, 1, 2, 3];
+  const ya = fy.yAxis(svg, y, H, mt, mb, (v) => fy.L.format(".1f")(v) + "×", 4);
+  ya.g.call(d3.axisLeft(y).tickValues(ticks).tickFormat((v) => fy.L.format(".1f")(v) + "×").tickSize(0));
+  const ml = ya.ml;
+  ya.g.attr("transform", `translate(${ml - 6},0)`).call((g) => g.select(".domain").remove());
+  const x = d3.scaleLinear().domain([Math.min(-10, d3.min(pts, (r) => r.d_ap)), Math.max(60, d3.max(pts, (r) => r.d_ap))]).nice().range([ml, W - mr]);
+  svg.append("g").selectAll("line").data(ticks).join("line")
+    .attr("x1", ml).attr("x2", W - mr).attr("y1", (v) => y(v)).attr("y2", (v) => y(v))
+    .style("stroke", (v) => (v === 1 ? "var(--cds-chart-reference)" : "var(--cds-chart-grid)"));
+  svg.append("g").attr("transform", `translate(0,${H - mb})`)
+    .call(d3.axisBottom(x).ticks(Math.max(3, Math.floor((W - ml) / 70))).tickFormat((v) => (v > 0 ? "+" : "") + v).tickSizeOuter(0));
+  svg.append("text").attr("x", (ml + W - mr) / 2).attr("y", H - 2).attr("text-anchor", "middle").text("Haftalık ortalama Ap artışı");
+  if (grid.length) {
+    const gx = grid.filter((g) => g.d_ap >= x.domain()[0] && g.d_ap <= x.domain()[1]);
+    svg.append("path").datum(gx).attr("d", d3.area().x((g) => x(g.d_ap)).y0((g) => y(g.lo)).y1((g) => y(g.hi)))
+      .style("fill", "var(--cds-chart-muted)").style("opacity", 0.25);
+    svg.append("path").datum(gx).attr("d", d3.line().x((g) => x(g.d_ap)).y((g) => y(g.ratio)))
+      .style("fill", "none").style("stroke", "var(--color-fg)").style("stroke-width", 2);
+  }
+  const col = { storm: dash.colors[0], placebo: dash.colors[1] };
+  const tt = fy.tip(el);
+  const sorted = pts.slice().sort((a, b) => (a.kind === "storm") - (b.kind === "storm"));
+  svg.append("g").selectAll("circle").data(sorted).join("circle")
+    .attr("cx", (r) => x(r.d_ap)).attr("cy", (r) => y(Math.max(0.36, Math.min(3.5, r.ratio)))).attr("r", 4.5)
+    .style("fill", (r) => col[r.kind]).style("stroke", "var(--color-panel)").style("stroke-width", 1.5).style("opacity", 0.9)
+    .on("pointermove", (ev, r) => {
+      tt.show(x(r.d_ap), y(r.ratio), fy.day(r.event) + (r.kind === "storm" ? " · fırtına haftası" : " · plasebo haftası"),
+        ["Oran: " + fy.L.format(".2f")(r.ratio) + "×", "Ap artışı: " + fy.fmt.spct1(r.d_ap).replace("%", ""),
+         "F10.7 değişimi: " + (r.d_f107 > 0 ? "+" : "") + fy.L.format(".0f")(r.d_f107) + " sfu", fy.L.format(",d")(r.n) + " obje"]);
+    })
+    .on("pointerleave", () => tt.hide());
+});
+
+dash.draw("alt-curves", (el) => {
+  const rows = fy.ready(el, "alt_curves");
+  if (!rows) return;
+  const series = ["Orta (Ap 50–80)", "Güçlü (Ap 80–130)", "Şiddetli (Ap > 130)"];
+  const col = { [series[0]]: dash.colors[0], [series[1]]: dash.colors[1], [series[2]]: dash.colors[2] };
+  const W = el.clientWidth, H = 240, mt = 10, mr = 16, mb = 34;
+  el.replaceChildren();
+  const svg = d3.select(el).append("svg").attr("width", W).attr("height", H).attr("role", "img")
+    .attr("aria-label", "Fırtına gücüne göre, fırtınadan önce ve sonra gün gün fazladan irtifa kaybı");
+  const y = d3.scaleLinear().domain([Math.min(-1, d3.min(rows, (r) => r.lost_days)), d3.max(rows, (r) => r.lost_days)]).nice().range([H - mb, mt]);
+  const ya = fy.yAxis(svg, y, H, mt, mb, (v) => fy.L.format(".0f")(v), 5);
+  const ml = ya.ml;
+  ya.g.attr("transform", `translate(${ml - 6},0)`).call((g) => g.select(".domain").remove());
+  const x = d3.scaleLinear().domain([-10, 20]).range([ml, W - mr]);
+  svg.append("g").selectAll("line").data(y.ticks(5)).join("line")
+    .attr("x1", ml).attr("x2", W - mr).attr("y1", (v) => y(v)).attr("y2", (v) => y(v))
+    .style("stroke", (v) => (v === 0 ? "var(--cds-chart-reference)" : "var(--cds-chart-grid)"));
+  svg.append("line").attr("x1", x(0)).attr("x2", x(0)).attr("y1", mt).attr("y2", H - mb).style("stroke", "var(--cds-chart-reference)");
+  svg.append("g").attr("transform", `translate(0,${H - mb})`)
+    .call(d3.axisBottom(x).tickValues([-10, -5, 0, 5, 10, 15, 20]).tickFormat((v) => (v > 0 ? "+" : "") + v).tickSizeOuter(0));
+  svg.append("text").attr("x", (ml + W - mr) / 2).attr("y", H - 2).attr("text-anchor", "middle").text("Fırtınadan sonraki gün");
+  const by = d3.group(rows, (r) => r.strength);
+  series.forEach((s) => {
+    const d = (by.get(s) || []).slice().sort((a, b) => a.day - b.day);
+    svg.append("path").datum(d).attr("d", d3.line().x((r) => x(r.day)).y((r) => y(r.lost_days)))
+      .style("fill", "none").style("stroke", col[s]).style("stroke-width", 2);
+  });
+  const cross = svg.append("line").attr("y1", mt).attr("y2", H - mb).style("stroke", "var(--cds-chart-reference)").attr("visibility", "hidden");
+  const tt = fy.tip(el);
+  svg.append("rect").attr("x", ml).attr("y", 0).attr("width", Math.max(0, W - mr - ml)).attr("height", H).style("fill", "transparent")
+    .on("pointermove", (ev) => {
+      const [px] = d3.pointer(ev);
+      const day = Math.max(-10, Math.min(20, Math.round(x.invert(px))));
+      cross.attr("x1", x(day)).attr("x2", x(day)).attr("visibility", "visible");
+      const lines = series.map((s) => {
+        const r = (by.get(s) || []).find((q) => q.day === day);
+        return s + ": " + (r ? fy.L.format(".1f")(r.lost_days) + " gün" : "—");
+      });
+      tt.show(x(day), mt + 10, (day > 0 ? "+" : "") + day + ". gün", lines);
+    })
+    .on("pointerleave", () => { cross.attr("visibility", "hidden"); tt.hide(); });
+});
+
+dash.draw("alt-coef", (el) => {
+  const all = fy.ready(el, "alt_coef");
+  if (!all) return;
+  const rows = all.filter((r) => r.band !== "Tümü");
+  const W = el.clientWidth, rowH = 46, mt = 8, mb = 28, H = mt + mb + rowH * rows.length, mr = 56;
+  el.replaceChildren();
+  const svg = d3.select(el).append("svg").attr("width", W).attr("height", H).attr("role", "img")
+    .attr("aria-label", "İrtifa bandına göre Ap'deki her 10 birim artışın alçalma hızına etkisi");
+  const labs = svg.append("g").selectAll("text").data(rows).join("text")
+    .attr("x", 0).attr("y", (r, i) => mt + i * rowH + rowH / 2 - 3).text((r) => r.band).style("fill", "var(--color-fg)");
+  svg.append("g").selectAll("text").data(rows).join("text")
+    .attr("x", 0).attr("y", (r, i) => mt + i * rowH + rowH / 2 + 12).text((r) => r.n_windows + " hafta");
+  let lw = 0;
+  labs.each(function () { lw = Math.max(lw, this.getComputedTextLength()); });
+  const ml = Math.ceil(lw) + 14;
+  const x = d3.scaleLinear().domain([0, Math.max(20, d3.max(rows, (r) => r.ap_pct_hi))]).nice().range([ml, W - mr]);
+  svg.append("g").selectAll("line").data(x.ticks(4)).join("line").attr("x1", (v) => x(v)).attr("x2", (v) => x(v))
+    .attr("y1", mt).attr("y2", H - mb).style("stroke", (v) => (v === 0 ? "var(--cds-chart-reference)" : "var(--cds-chart-grid)"));
+  svg.append("g").attr("transform", `translate(0,${H - mb})`)
+    .call(d3.axisBottom(x).ticks(4).tickFormat((v) => (v > 0 ? "+" : "") + "%" + v).tickSizeOuter(0));
+  const tt = fy.tip(el);
+  const g = svg.append("g").selectAll("g").data(rows).join("g").attr("transform", (r, i) => `translate(0,${mt + i * rowH + rowH / 2})`);
+  g.append("line").attr("x1", (r) => x(r.ap_pct_lo)).attr("x2", (r) => x(r.ap_pct_hi)).style("stroke", dash.colors[0]).style("stroke-width", 2).style("stroke-linecap", "round");
+  g.append("circle").attr("cx", (r) => x(r.ap_pct)).attr("r", 5).style("fill", dash.colors[0]).style("stroke", "var(--color-panel)").style("stroke-width", 2);
+  g.append("text").attr("class", "fy-vlab").attr("x", (r) => x(r.ap_pct_hi) + 8).attr("y", 4).text((r) => fy.fmt.spct1(r.ap_pct));
+  g.append("rect").attr("x", ml).attr("y", -rowH / 2).attr("width", Math.max(0, W - ml)).attr("height", rowH).style("fill", "transparent")
+    .on("pointermove", (ev, r) => {
+      tt.show(x(r.ap_pct), mt + rows.indexOf(r) * rowH + 10, r.band,
+        ["+10 Ap: " + fy.fmt.spct1(r.ap_pct), "%95 aralık: " + fy.fmt.spct1(r.ap_pct_lo) + " ile " + fy.fmt.spct1(r.ap_pct_hi),
+         "+10 sfu F10.7: " + fy.fmt.spct1(r.f107_pct), "R² = " + fy.L.format(".2f")(r.r2)]);
+    })
+    .on("pointerleave", () => tt.hide());
+});
+
+dash.draw("altev", (tb) => {
+  const d = dash.data("alt_events");
+  if (d.status !== "ok") { tb.replaceChildren(); return; }
+  const top = d.data.slice().sort((a, b) => b.ap_peak - a.ap_peak).slice(0, 8);
+  tb.replaceChildren(...top.map((r) => {
+    const tr = document.createElement("tr");
+    tr.dataset.key = r.event;
+    [fy.day(r.event), fy.L.format(",d")(r.ap_peak), "+" + fy.L.format(".1f")(r.d_ap), fy.L.format(".2f")(r.ratio) + "×",
+     r.placebo_ratio == null ? "—" : fy.L.format(".2f")(r.placebo_ratio) + "×", fy.L.format(".1f")(r.lost_days)]
+      .forEach((c, i) => {
+        const td = document.createElement("td");
+        td.textContent = c;
+        if (i > 0) td.className = "r";
+        if (i === 5 && r.lost_days >= 5) td.classList.add("fy-hi");
+        tr.appendChild(td);
+      });
+    return tr;
+  }));
+});
+
+dash.draw("sltop", (tb) => {
+  const d = dash.data("starlink_launches");
+  if (d.status !== "ok") { tb.replaceChildren(); return; }
+  const top = d.data.slice().sort((a, b) => b.lost30 - a.lost30 || a.date.localeCompare(b.date)).slice(0, 6);
+  tb.replaceChildren(...top.map((r) => {
+    const tr = document.createElement("tr");
+    tr.dataset.key = r.tag;
+    [r.tag, fy.day(r.date), fy.L.format(",d")(r.lost30), fy.L.format(",d")(r.n), fy.L.format(".1f")(r.kp_max7), fy.L.format(".0f")(r.perigee_med)]
+      .forEach((c, i) => {
+        const td = document.createElement("td");
+        td.textContent = c;
+        if (i > 1) td.className = "r";
+        if (i === 4 && r.kp_max7 >= 5) td.classList.add("fy-hi");
+        tr.appendChild(td);
+      });
+    return tr;
+  }));
+});
+</script>
