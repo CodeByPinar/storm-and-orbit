@@ -2036,6 +2036,7 @@ function updateUI(s) {
 
 // ------------------------------------------------------------------ Kare oluşturma
 let mapTick = 0;
+const VIEW = { x: 0 };
 function frame(t) {
   const s = LAB.on ? labState() : stateAt(t); lastState = s;
   if (s.stage !== curStage) { curStage = s.stage; setStageAO(s.stage); }
@@ -2047,7 +2048,11 @@ function frame(t) {
   if (CAM.mode === "free") pos = sph(tgt, CAM.dist, CAM.az, CAM.el);
   if (CAM.blend) { const k = easeIO((performance.now() - CAM.blend.t0) / CAM.blend.dur); pos = CAM.blend.from.pos.clone().lerp(pos, k); tgt = CAM.blend.from.tgt.clone().lerp(tgt, k); if (k >= 1) CAM.blend = null; }
   camera.position.copy(pos); camera.lookAt(tgt); CAM.lastTgt.copy(tgt); CAM.lastPos.copy(pos);
-  camera.near = s.stage === "studio" ? 0.1 : 0.005; camera.far = s.stage === "studio" ? 200 : 120; camera.updateProjectionMatrix();
+  camera.near = s.stage === "studio" ? 0.1 : 0.005; camera.far = s.stage === "studio" ? 200 : 120;
+  // Görüntüyü yatayda kaydırma (video ve yan panel düzenleri için; 0 = ortada)
+  if (VIEW.x) { const w = canvas.clientWidth || innerWidth, h = canvas.clientHeight || innerHeight; camera.setViewOffset(w, h, -VIEW.x * w, 0, w, h); }
+  else if (camera.view && camera.view.enabled) camera.clearViewOffset();
+  camera.updateProjectionMatrix();
   composer.render();
   updateUI(s); layoutCallouts(s); updatePick();
   if (CAPTURE || (mapTick++ & 1) === 0) drawMap(s);
@@ -2282,7 +2287,7 @@ function loop(now) {
 window.SIM = {
   duration: TOTAL, chapters: CH_IDS.map((id, i) => ({ id, start: i * CHD })),
   seek(t) { if (LAB.on) setLab(false); simT = wrapT(t); CAM.blend = null; frame(simT); return { chapter: chName(stateAt(simT).ci), t: simT }; },
-  state: (t) => stateAt(t), lang: (l) => setLang(l === "en" ? "en" : "tr"), mapReady: () => GEO.ready, lab: (on = true) => setLab(on),
+  state: (t) => stateAt(t), lang: (l) => setLang(l === "en" ? "en" : "tr"), mapReady: () => GEO.ready, lab: (on = true) => setLab(on), view: (x = 0) => { VIEW.x = x; },
   capture(on = true) { CAPTURE = on; $("#sim").classList.toggle("capture", on); if (!on) { lastNow = performance.now(); requestAnimationFrame(loop); } },
   play: () => setPlaying(true), pause: () => setPlaying(false), setDuration: (id) => setDur(id), pick: (x, y) => pickAt(x, y),
 };

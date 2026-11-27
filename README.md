@@ -18,6 +18,7 @@
 
 - [Özet](#özet)
 - [Bulgular](#bulgular)
+- [Tanıtım videosu](#tanıtım-videosu)
 - [Etkileşimli sunum](#etkileşimli-sunum)
 - [Nasıl çalışıyor](#nasıl-çalışıyor)
 - [Depo yapısı](#depo-yapısı)
@@ -111,6 +112,16 @@ Bütün tablolar ve 64 fırtınanın listesi: [docs/SONUCLAR.md](docs/SONUCLAR.m
 
 ---
 
+## Tanıtım videosu
+
+[![Tanıtım videosu](video/poster.jpg)](video/storm-and-orbit.mp4)
+
+**[storm-and-orbit.mp4](video/storm-and-orbit.mp4)** · 38 saniye · 1080p · müzikli
+
+Sunumun three.js sahneleri başsız tarayıcıda kare kare çizilip ffmpeg ile MP4'e dönüştürüldü; müzik de tarayıcıda kodla sentezlendi. Nasıl üretildiği ve yeniden üretme adımları: [video/README.md](video/README.md)
+
+---
+
 ## Etkileşimli sunum
 
 **https://storm-and-orbit.up.railway.app**
@@ -198,6 +209,7 @@ storm-and-orbit/
 │   └── geo/                 Natural Earth TopoJSON
 ├── deploy/                  Railway yayını (Dockerfile, Caddyfile, site/)
 ├── page/                    İlk analiz raporunun pano sayfası
+├── video/                   Tanıtım videosu (MP4) ve onu üreten betikler
 ├── tools/
 │   ├── make_figures.py      docs/figures grafiklerini üretir
 │   └── screenshots/         Sunumdan ekran görüntüsü alan Node betiği
@@ -372,6 +384,7 @@ Ayrıntılar: [deploy/README.md](deploy/README.md)
 | `tools/make_figures.py` | `dash_data/` dosyalarından `docs/figures/` altındaki 6 grafiği üretir (matplotlib) |
 | `tools/screenshots/shoot.mjs` | Canlı ya da yerel sunumdan 17 ekran görüntüsü alır (puppeteer-core + Edge/Chrome) |
 | `download_data.py` | GCAT ve GFZ verilerini güncel hâliyle indirir |
+| `video/render.mjs` | Tanıtım videosunu kare kare çizer, müziği sentezler, MP4'e dönüştürür (puppeteer-core + ffmpeg) |
 
 ---
 
@@ -429,6 +442,8 @@ Depodaki üçüncü taraf verileri kendi lisanslarına tabidir ([NOTICE](NOTICE)
 6. **Starlink:** low-release launches with a stormy first week lost 3.83% within 30 days versus 0.60% for calm ones, but 38 of the 42 losses come from one event (February 2022, 38 of 49 satellites).
 
 **Method:** per-object Theil–Sen pre-storm trends, a fully symmetric placebo week 16 days earlier, week-level log-linear models per altitude band, and storm-level bootstrap intervals; validated on synthetic data with a known effect. Details (in Turkish) in [docs/YONTEM.md](docs/YONTEM.md).
+
+**Promo video:** a 38-second 1080p trailer rendered frame by frame from the three.js scenes, with synthesized music: [video/storm-and-orbit.mp4](video/storm-and-orbit.mp4).
 
 **Reproduce:** `pip install -r requirements.txt`, `python download_data.py`, `python analysis.py`; the orbit analysis needs a free Space-Track account (`st_plan.py` → `spacetrack_fetch.py` → `altitude.py`). Raw Space-Track records are not redistributed, per its terms of use.
 

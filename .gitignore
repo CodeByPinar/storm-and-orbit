@@ -4,8 +4,9 @@ data/spacetrack/
 # Yerel test kopyası (build_data.py üretir)
 presentation/preview.html
 
-# Ekran görüntüsü aracı bağımlılıkları
+# Ekran görüntüsü ve video araçlarının bağımlılıkları ve geçici dosyaları
 node_modules/
+video/.tmp/
 
 # Ortam ve gizli bilgiler
 .env
