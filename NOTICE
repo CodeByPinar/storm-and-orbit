@@ -1,0 +1,13 @@
+Storm & Orbit
+Copyright (c) 2026 Pınar
+
+The code, documentation, figures and screenshots are licensed under the MIT License (see LICENSE).
+
+Third-party data in this repository is not covered by this license:
+
+- data/satcat.tsv, data/auxcat.tsv, data/ftocat.tsv: GCAT, Jonathan McDowell,
+  https://planet4589.org/space/gcat/ (CC BY 4.0)
+- data/kp.txt: GFZ German Research Centre for Geosciences,
+  https://kp.gfz-potsdam.de/en/ (CC BY 4.0)
+- presentation/geo/, deploy/site/geo/: Natural Earth data (public domain),
+  packaged as TopoJSON by world-atlas (ISC License)

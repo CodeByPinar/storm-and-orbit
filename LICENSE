@@ -19,14 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
----
-
-Third-party data in this repository is not covered by this license:
-
-- data/satcat.tsv, data/auxcat.tsv, data/ftocat.tsv: GCAT, Jonathan McDowell,
-  https://planet4589.org/space/gcat/ (CC BY 4.0)
-- data/kp.txt: GFZ German Research Centre for Geosciences,
-  https://kp.gfz-potsdam.de/en/ (CC BY 4.0)
-- presentation/geo/, deploy/site/geo/: Natural Earth data (public domain),
-  packaged as TopoJSON by world-atlas (ISC License)

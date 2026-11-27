@@ -403,7 +403,7 @@ Space-Track ham kayıtları kullanım koşulları gereği bu depoda paylaşılma
 
 Kod, belgeler, grafikler ve ekran görüntüleri [MIT Lisansı](LICENSE) ile paylaşılır.
 
-Depodaki üçüncü taraf verileri kendi lisanslarına tabidir:
+Depodaki üçüncü taraf verileri kendi lisanslarına tabidir ([NOTICE](NOTICE)):
 
 | Dosyalar | Kaynak | Lisans |
 |---|---|---|
